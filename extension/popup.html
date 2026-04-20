@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Job Match Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 420px;
+      min-height: 400px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .container {
+      background: white;
+      min-height: 400px;
+      border-radius: 0;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, 30px); }
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .header p {
+      font-size: 13px;
+      opacity: 0.9;
+      margin: 6px 0 0 0;
+      position: relative;
+      z-index: 1;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+    
+    /* Main Content */
+    .content {
+      padding: 20px;
+    }
+    
+    /* Upload Section */
+    .upload-section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 2px dashed #e1e4e8;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .upload-section.has-resume {
+      background: #f0fdf4;
+      border-color: #86efac;
+      border-style: solid;
+    }
+
+    .upload-section.has-resume::before {
+      content: '✓';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #10b981;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .upload-section label {
+      display: block;
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+    
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 13px;
+      border: 1px solid #e1e4e8;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    input[type="file"]:hover {
+      border-color: #667eea;
+      background: #faf9ff;
+    }
+
+    input[type="file"]::file-selector-button {
+      padding: 6px 14px;
+      margin-right: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .resume-status {
+      font-size: 13px;
+      color: #10b981;
+      margin-top: 10px;
+      font-weight: 500;
+      display: none;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    /* Button */
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button:disabled {
+      background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    button:disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    button span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Info Box */
+    .info {
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin: 16px 0;
+      font-size: 13px;
+      line-height: 1.6;
+      border-left: 4px solid #3b82f6;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      display: none;
+    }
+    
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    
+    /* Error */
+    .error {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin: 16px 0;
+      border-left: 4px solid #ef4444;
+      display: none;
+      font-size: 13px;
+      line-height: 1.6;
+      animation: shake 0.4s ease-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+    
+    /* Results */
+    .results {
+      padding: 20px 0;
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+    }
+    
+    .score-container {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 24px;
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .score-label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .score {
+      font-size: 56px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .score-subtitle {
+      font-size: 13px;
+      color: #9ca3af;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+    
+    /* Section */
+    .section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+      animation: slideIn 0.4s ease-out;
+    }
+
+    .section:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .section h3 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      color: #374151;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section h3 .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .section.matching h3 .badge {
+      background: #10b981;
+      color: white;
+    }
+
+    .section.missing h3 .badge {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .section.recommendations h3 .badge {
+      background: #667eea;
+      color: white;
+    }
+    
+    .section ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    
+    .section li {
+      padding: 10px 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #374151;
+      border-bottom: 1px solid #f3f4f6;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .section li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .section li::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 13px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #667eea;
+    }
+
+    .section.matching li::before {
+      background: #10b981;
+    }
+
+    .section.missing li::before {
+      background: #f59e0b;
+    }
+
+    .section.recommendations li::before {
+      background: #667eea;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 16px 20px;
+      text-align: center;
+      border-top: 1px solid #f3f4f6;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f3f4f6;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Job Match Analyzer</h1>
+      <p>AI-powered job matching in seconds</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <!-- Upload Section -->
+      <div id="upload-section" class="upload-section">
+        <label for="resume-upload">📄 Upload Your Resume</label>
+        <input type="file" id="resume-upload" accept=".pdf,.doc,.docx,.txt">
+        <div id="resume-status" class="resume-status">
+          ✓ Resume uploaded successfully
+        </div>
+      </div>
+      
+      <!-- Analyze Button -->
+      <button id="analyze-btn" disabled>
+        <span>Analyze This Job</span>
+      </button>
+      
+      <!-- Info Message -->
+      <div id="info" class="info">
+        📍 Navigate to a LinkedIn or Indeed job posting, then click "Analyze This Job"
+      </div>
+      
+      <!-- Loading State -->
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">Analyzing job match...</p>
+      </div>
+      
+      <!-- Error Message -->
+      <div id="error" class="error"></div>
+      
+      <!-- Results -->
+      <div id="results" class="results">
+        <!-- Score -->
+        <div class="score-container">
+          <div class="score-label">Match Score</div>
+          <div class="score" id="match-score">--</div>
+          <div class="score-subtitle">How well you fit this role</div>
+        </div>
+        
+        <!-- Matching Skills -->
+        <div class="section matching">
+          <h3><span class="badge">Match</span> Matching Skills</h3>
+          <ul id="matching-skills"></ul>
+        </div>
+        
+        <!-- Missing Skills -->
+        <div class="section missing">
+          <h3><span class="badge">Gap</span> Missing Skills</h3>
+          <ul id="missing-skills"></ul>
+        </div>
+        
+        <!-- Recommendations -->
+        <div class="section recommendations">
+          <h3><span class="badge">Tips</span> Recommendations</h3>
+          <ul id="recommendations"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Built with Claude AI • <a href="https://github.com/yourusername/job-match-analyzer" target="_blank">GitHub</a>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
