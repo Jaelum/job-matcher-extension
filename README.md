@@ -9,6 +9,7 @@
 Job Match Analyzer is a Chrome extension that instantly analyzes how well your resume matches job postings on LinkedIn and Indeed. Using Claude AI, it provides a match score, identifies your strengths, highlights skill gaps, and offers actionable recommendations—all in under 10 seconds.
 
 **Built as a portfolio project to demonstrate:**
+
 - Full-stack development (Chrome Extension + Python Backend)
 - AI integration and prompt engineering
 - Real-world problem solving
@@ -27,18 +28,21 @@ Job Match Analyzer is a Chrome extension that instantly analyzes how well your r
 ## 🛠️ Tech Stack
 
 **Frontend:**
+
 - Chrome Extension (Manifest V3)
 - JavaScript (ES6+)
 - HTML5 + CSS3
 - Chrome Storage API
 
 **Backend:**
+
 - Python 3.9+
 - FastAPI
 - Anthropic Claude Sonnet 4 AI
 - CORS middleware for browser compatibility
 
 **Design:**
+
 - Inter font family
 - Modern purple gradient theme
 - Minimal badge icons
@@ -47,16 +51,19 @@ Job Match Analyzer is a Chrome extension that instantly analyzes how well your r
 ## 📸 Screenshots
 
 ### Extension in Action
+
 ![Extension Popup](screenshots/extension-demo.png)
-*The extension analyzes a job posting and displays match results*
+_The extension analyzes a job posting and displays match results_
 
 ### Detailed Results
+
 ![Results Breakdown](screenshots/results-detail.png)
-*Match score with matching skills, gaps, and recommendations*
+_Match score with matching skills, gaps, and recommendations_
 
 ### LinkedIn Integration
+
 ![LinkedIn Demo](screenshots/linkedin-demo.png)
-*Seamlessly integrated into your job search workflow*
+_Seamlessly integrated into your job search workflow_
 
 ## 🎯 How It Works
 
@@ -110,17 +117,20 @@ Job Match Analyzer is a Chrome extension that instantly analyzes how well your r
 ### Backend Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Jaelum/job-match-analyzer.git
    cd job-match-analyzer
    ```
 
 2. **Navigate to backend folder**
+
    ```bash
    cd backend
    ```
 
 3. **Create virtual environment**
+
    ```bash
    python -m venv venv
    ```
@@ -136,11 +146,13 @@ Job Match Analyzer is a Chrome extension that instantly analyzes how well your r
      ```
 
 5. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 6. **Create .env file**
+
    ```bash
    # Create a .env file in the backend folder
    # Add your Anthropic API key:
@@ -148,11 +160,13 @@ Job Match Analyzer is a Chrome extension that instantly analyzes how well your r
    ```
 
 7. **Start the backend server**
+
    ```bash
    python main.py
    ```
-   
+
    You should see:
+
    ```
    INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
    ```
@@ -209,8 +223,10 @@ job-match-analyzer/
 ## 🎨 Key Technical Decisions
 
 ### 1. **Robust JSON Parsing**
+
 Claude AI sometimes returns text before JSON. Built a parser that handles multiple formats with 100% success rate:
-```python
+
+````python
 if "```json" in response_text:
     # Extract from markdown code blocks
     start = response_text.find("```json") + 7
@@ -219,30 +235,38 @@ else:
     # Extract JSON object from anywhere in response
     start = response_text.find("{")
     end = response_text.rfind("}") + 1
-```
+````
 
 ### 2. **Transferable Skills Recognition**
+
 Enhanced AI prompt to recognize equivalent experience:
+
 ```
 "Salesforce CRM" matches "CRM experience"
 "Enterprise sales" matches "B2B sales"
 ```
+
 Improved accuracy from ~60% to 85%.
 
 ### 3. **Multiple Selector Fallbacks**
+
 LinkedIn/Indeed frequently change their HTML. Implemented 6-8 fallback selectors per element:
+
 ```javascript
 const selectors = [
-  '.job-title',
-  '.jobs-unified-top-card__job-title',
-  '[data-job-title]',
+  ".job-title",
+  ".jobs-unified-top-card__job-title",
+  "[data-job-title]",
   // ... 5 more fallbacks
 ];
 ```
+
 Achieves 95%+ extraction success rate.
 
 ### 4. **CORS Middleware**
+
 Chrome extensions run on different origins than localhost. Added CORS to FastAPI:
+
 ```python
 app.add_middleware(
     CORSMiddleware,
@@ -294,9 +318,9 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 👨‍💻 Author
 
 **James Lum**
-- GitHub: [@Jaelum](https://github.com/Jaelum)
-- LinkedIn: [James Lum](linkedin.com/in/lumjames)
 
+- GitHub: [@Jaelum](https://github.com/Jaelum)
+- LinkedIn: [James Lum](https://linkedin.com/in/lumjames)
 
 ## 🙏 Acknowledgments
 
