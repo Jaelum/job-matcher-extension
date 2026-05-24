@@ -295,8 +295,8 @@ This project is open source and available under the [MIT License](LICENSE).
 
 **James Lum**
 - GitHub: [@Jaelum](https://github.com/Jaelum)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Portfolio: [Your Portfolio](https://yourportfolio.com)
+- LinkedIn: [Your LinkedIn](linkedin.com/in/lumjames)
+
 
 ## 🙏 Acknowledgments
 
